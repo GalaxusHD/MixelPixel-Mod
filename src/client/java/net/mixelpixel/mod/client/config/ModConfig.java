@@ -19,6 +19,17 @@ public final class ModConfig {
     public String targetGlowColor = "white";
     public double targetRange = 32.0;
     public boolean targetMustBeVisible = true;
+    public String markerState = "on";
+    public boolean messageEnabled = true;
+    public boolean kickEnabled = true;
+    public boolean banEnabled = true;
+    public boolean reportEnabled = true;
+    public boolean nameMcEnabled = true;
+    public int selectionTimeoutSeconds = 30;
+    public int selectionSeconds() { return net.mixelpixel.mod.client.target.TargetLease.clampSeconds(selectionTimeoutSeconds); }
+
+    public boolean targetingEnabled() { return !"off".equals(markerState); }
+    public boolean markerVisible() { return "on".equals(markerState); }
 
     public static ModConfig get() {
         if (instance == null) load();
@@ -34,6 +45,7 @@ public final class ModConfig {
             instance = null;
         }
         if (instance == null) instance = new ModConfig();
+        if (!java.util.List.of("on", "hidden", "off").contains(instance.markerState == null ? "" : instance.markerState)) instance.markerState = "on";
         instance.save();
     }
 
@@ -59,3 +71,4 @@ public final class ModConfig {
         return color == null ? 0xFFFFFF : color;
     }
 }
+
