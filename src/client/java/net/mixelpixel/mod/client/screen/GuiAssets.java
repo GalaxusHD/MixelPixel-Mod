@@ -11,8 +11,13 @@ public final class GuiAssets {
     public static final Identifier WORLDS = id("textures/gui/worlds.png");
     public static final Identifier MULTIPLAYER = id("textures/gui/multiplayer.png");
     public static final Identifier LOADING = id("textures/gui/loading.png");
-    public static final Identifier LOGO = id("textures/gui/logo.png");
+    public static final Identifier LOGO = id("textures/gui/logo-mod-v1.png");
     public static final Identifier SERVER_HOVER = id("textures/gui/server_hover.png");
+    public static final Identifier RADIAL_KICK = id("textures/gui/radial/kick.png");
+    public static final Identifier RADIAL_BAN = id("textures/gui/radial/ban.png");
+    public static final Identifier RADIAL_MESSAGE = id("textures/gui/radial/message.png");
+    public static final Identifier RADIAL_NAMEMC = id("textures/gui/radial/menu-symbol.png");
+    public static final Identifier RADIAL_REPORT = id("textures/gui/radial/report.png");
     public static final RenderPipeline PIPELINE = RenderPipelines.GUI_TEXTURED;
 
     private GuiAssets() {
@@ -23,6 +28,10 @@ public final class GuiAssets {
     }
 
     public static void drawCover(DrawContext context, Identifier texture, int width, int height, int textureWidth, int textureHeight) {
+        drawCover(context, texture, width, height, textureWidth, textureHeight, 0xFFFFFFFF);
+    }
+
+    public static void drawCover(DrawContext context, Identifier texture, int width, int height, int textureWidth, int textureHeight, int color) {
         double screenRatio = (double) width / height;
         double textureRatio = (double) textureWidth / textureHeight;
         float u = 0;
@@ -36,6 +45,7 @@ public final class GuiAssets {
             visibleWidth = (float) (textureHeight * screenRatio);
             u = (textureWidth - visibleWidth) / 2.0F;
         }
-        context.drawTexture(PIPELINE, texture, 0, 0, u, v, width, height, Math.round(visibleWidth), Math.round(visibleHeight), textureWidth, textureHeight);
+        context.drawTexture(PIPELINE, texture, 0, 0, u, v, width, height, Math.round(visibleWidth), Math.round(visibleHeight), textureWidth, textureHeight, color);
     }
 }
+

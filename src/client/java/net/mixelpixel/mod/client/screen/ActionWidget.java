@@ -3,11 +3,11 @@ package net.mixelpixel.mod.client.screen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public final class ActionWidget extends ClickableWidget {
+public final class ActionWidget extends PressableWidget {
     private final Runnable action;
     private final Identifier hoverTexture;
     private final int hoverTextureWidth;
@@ -29,19 +29,18 @@ public final class ActionWidget extends ClickableWidget {
         if (invisible) return;
         if (isHovered() && hoverTexture != null) {
             context.drawTexture(GuiAssets.PIPELINE, hoverTexture, getX(), getY(), 0, 0,
-                    width, height, width, height, hoverTextureWidth, hoverTextureHeight);
+                    width, height, hoverTextureWidth, hoverTextureHeight, hoverTextureWidth, hoverTextureHeight);
             context.fill(getX(), getY(), getRight(), getBottom(), 0x33000000);
         } else {
-            context.fill(getX(), getY(), getRight(), getBottom(), 0xFF000000);
-            context.fill(getX() + 2, getY() + 2, getRight() - 2, getBottom() - 2,
-                    isHovered() ? 0xFF8A8A8A : 0xFF666666);
+            super.renderWidget(context, mouseX, mouseY, delta);
+            return;
         }
         context.drawCenteredTextWithShadow(MinecraftClient.getInstance().textRenderer, getMessage(),
-                getX() + width / 2, getY() + (height - 8) / 2, 0xFFFFFF);
+                getX() + width / 2, getY() + (height - 8) / 2, 0xFFFFFFFF);
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public void onPress() {
         action.run();
     }
 
