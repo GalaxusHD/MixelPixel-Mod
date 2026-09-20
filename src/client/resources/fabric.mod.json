@@ -5,10 +5,13 @@
   "name": "MixelPixel Mod",
   "description": "Komfortfunktionen und ein natives MixelPixel-Menü für Minecraft 1.21.8.",
   "authors": ["Galaxus_HD"],
+  "contributors": ["_Monty_"],
+  "icon": "assets/mixelpixelmod/textures/gui/logo-mod-v1.png",
   "license": "All-Rights-Reserved",
   "environment": "client",
   "entrypoints": {
-    "client": ["net.mixelpixel.mod.client.MixelPixelModClient"]
+    "client": ["net.mixelpixel.mod.client.MixelPixelModClient"],
+    "modmenu": ["net.mixelpixel.mod.client.config.ModMenuIntegration"]
   },
   "mixins": ["mixelpixelmod.client.mixins.json"],
   "depends": {

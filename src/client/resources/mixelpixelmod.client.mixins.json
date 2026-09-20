@@ -4,6 +4,9 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "MinecraftClientMixin",
+    "FileResourcePackProviderMixin",
+    "ClientCommonNetworkHandlerMixin",
+    "EntityMixin",
     "LoadingScreenBackgroundMixin",
     "TitleScreenMixin",
     "MultiplayerScreenMixin",
@@ -15,3 +18,4 @@
     "defaultRequire": 1
   }
 }
+
