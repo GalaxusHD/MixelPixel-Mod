@@ -9,7 +9,6 @@ import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
-import net.minecraft.client.network.CookieStorage;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.Text;
@@ -26,7 +25,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen {
@@ -42,7 +40,7 @@ public abstract class TitleScreenMixin extends Screen {
         ci.cancel();
         clearChildren();
         int center = width / 2;
-        int buttonWidth = Math.min(400, Math.max(200, width - 40));
+        int buttonWidth = Math.min(200, width - 40);
         int x = center - buttonWidth / 2;
         int top = Math.max(102, height / 2 - 30);
 
@@ -58,13 +56,14 @@ public abstract class TitleScreenMixin extends Screen {
                     this::mixelpixel$openModMenu, null, 0, 0, false));
         }
 
-        addDrawableChild(new ActionWidget(center - 200, top + 108, 196, 20, Text.translatable("menu.options"),
+        int halfWidth = (buttonWidth - 4) / 2;
+        addDrawableChild(new ActionWidget(x, top + 108, halfWidth, 20, Text.translatable("menu.options"),
                 () -> client.setScreen(new OptionsScreen(this, client.options)), null, 0, 0, false));
-        addDrawableChild(new ActionWidget(center + 4, top + 108, 196, 20, Text.translatable("menu.quit"),
+        addDrawableChild(new ActionWidget(x + halfWidth + 4, top + 108, halfWidth, 20, Text.translatable("menu.quit"),
                 client::scheduleStop, null, 0, 0, false));
 
-        int logoSize = Math.max(50, Math.min(90, height / 5));
-        addDrawableChild(new ActionWidget(16, height - logoSize - 36, logoSize, logoSize, Text.empty(),
+        int logoSize = Math.max(40, Math.min(50, height / 5));
+        addDrawableChild(new ActionWidget(6, height - logoSize - 18, logoSize, logoSize, Text.empty(),
                 this::mixelpixel$openVotes, null, 0, 0, true));
     }
 
@@ -73,36 +72,40 @@ public abstract class TitleScreenMixin extends Screen {
         ci.cancel();
         GuiAssets.drawCover(context, GuiAssets.TITLE, width, height, 2560, 1334);
 
-        int logoWidth = Math.min(420, width - 80);
+        int logoWidth = Math.min(256, width - 80);
         int logoHeight = logoWidth * 44 / 256;
         int logoX = (width - logoWidth) / 2;
-        int logoY = Math.max(18, height / 14);
-        context.drawTexture(GuiAssets.PIPELINE, MINECRAFT_LOGO, logoX, logoY, 0, 0, logoWidth, logoHeight, 256, 44);
+        int logoY = Math.max(18, height / 9);
+        context.drawTexture(GuiAssets.PIPELINE, MINECRAFT_LOGO, logoX, logoY, 0, 0, logoWidth, logoHeight, 256, 44, 256, 64);
         int editionWidth = logoWidth / 2;
         context.drawTexture(GuiAssets.PIPELINE, EDITION_LOGO, (width - editionWidth) / 2,
-                logoY + logoHeight - 3, 0, 0, editionWidth, editionWidth * 14 / 128, 128, 14);
+                logoY + logoHeight - 7, 0, 0, editionWidth, editionWidth * 14 / 128, 128, 14, 128, 16);
 
         float pulse = 1.0F + 0.08F * (float) Math.sin(Util.getMeasuringTimeMs() / 180.0);
         context.getMatrices().pushMatrix();
         context.getMatrices().translate(width / 2.0F + logoWidth * 0.36F, logoY + logoHeight * 0.75F);
         context.getMatrices().rotate((float) Math.toRadians(-20));
         context.getMatrices().scale(pulse, pulse);
-        context.drawCenteredTextWithShadow(textRenderer, "MixelPixel auf die 1!", 0, 0, 0xFFFF00);
+        context.drawCenteredTextWithShadow(textRenderer, "MixelPixel auf die 1!", 0, 0, 0xFFFFFF00);
         context.getMatrices().popMatrix();
 
-        int smallLogo = Math.max(50, Math.min(90, height / 5));
-        int smallX = 16;
-        int smallY = height - smallLogo - 36;
+        int smallLogo = Math.max(40, Math.min(50, height / 5));
+        int smallX = 6;
+        int smallY = height - smallLogo - 18;
         context.drawTexture(GuiAssets.PIPELINE, GuiAssets.LOGO, smallX, smallY, 0, 0,
-                smallLogo, smallLogo, 512, 512);
-        context.drawTextWithShadow(textRenderer, MixelPixelModClient.versionText(), 16, height - 22, 0xFFFFFF);
+                smallLogo, smallLogo, 1254, 1254, 1254, 1254);
+        context.drawTextWithShadow(textRenderer, MixelPixelModClient.versionText(), 6, height - 12, 0xFFFFFFFF);
+        String copyright = "Copyright Mojang AB. Do not distribute!";
+        context.drawTextWithShadow(textRenderer, copyright,
+                width - textRenderer.getWidth(copyright) - 2, height - 10, 0xFFFFFFFF);
         super.render(context, mouseX, mouseY, delta);
     }
 
     private void mixelpixel$connect() {
         String address = "MixelPixel.net";
         ServerInfo info = new ServerInfo("MixelPixel", address, ServerInfo.ServerType.OTHER);
-        ConnectScreen.connect(this, client, ServerAddress.parse(address), info, false, new CookieStorage(Map.of()));
+        // Same call used by MultiplayerScreen when a saved server is double-clicked.
+        ConnectScreen.connect(this, client, ServerAddress.parse(info.address), info, false, null);
     }
 
     private void mixelpixel$openVotes() {

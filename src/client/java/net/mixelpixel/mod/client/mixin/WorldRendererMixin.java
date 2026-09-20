@@ -26,7 +26,7 @@ public abstract class WorldRendererMixin {
     private void mixelpixel$renderTargetOverlay(Entity entity, double x, double y, double z, float tickDelta,
                                                  MatrixStack matrices, VertexConsumerProvider consumers,
                                                  CallbackInfo ci) {
-        if (entity != PlayerTargeting.getTarget() || !"overlay".equalsIgnoreCase(ModConfig.get().targetGlowMode)) return;
+        if (entity != PlayerTargeting.getMarkedTarget() || !"overlay".equalsIgnoreCase(ModConfig.get().targetGlowMode)) return;
 
         int rgb = ModConfig.get().glowRgb();
         OutlineVertexConsumerProvider outline = bufferBuilders.getOutlineVertexConsumers();
@@ -39,3 +39,4 @@ public abstract class WorldRendererMixin {
         matrices.pop();
     }
 }
+
