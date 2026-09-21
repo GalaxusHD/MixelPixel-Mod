@@ -4,6 +4,16 @@ Clientseitige Fabric-Mod für Minecraft 1.21.8. Sie stellt ein angepasstes Mixel
 
 ## Spieler-Menü
 
+Die Mod-Markierung wird nur bei freier Sichtlinie von der aktuellen Kamera
+zum Kopf des ausgewählten Spielers angezeigt. Blockiert eine Wand diese
+Sichtlinie, verschwinden Glow und Overlay. Die gespeicherte Auswahl bleibt
+bis zum Ablauf des Zeitlimits für das P-Menü erhalten. Diese Sichtprüfung
+ist auch bei deaktivierter Sichtprüfung für die Zielauswahl immer aktiv.
+
+Die zweisprachige Datei `LICENSE` einschließlich der Hinweise zum Logo und
+Serverressourcenpaket liegt auch im Hauptverzeichnis der gebauten JAR.
+Offene Veröffentlichungsschritte stehen in `MODRINTH-TODO.md`.
+
 P-Menü und die Zielmarkierung (Glow/Overlay) sind nur auf `mixelpixel.net` und `play.mixelpixel.net` aktiv. Die Prüfung verwendet die eingegebene Verbindungsadresse, ignoriert Groß-/Kleinschreibung und akzeptiert einen gültigen optionalen Port. Einzelspieler, LAN und andere Server sind ausgeschlossen. Beim Verlassen eines erlaubten Servers wird das Ziel verworfen; Menüaktionen prüfen die Freigabe zusätzlich vor dem Senden.
 
 Eine einmal anvisierte Spielerauswahl bleibt beim Wegsehen, bei größerer Entfernung und beim Öffnen von Menüs bis zum Ablauf des Auswahl-Zeitlimits erhalten. Standard: 30 Sekunden. Der Regler in den Einstellungen reicht von 3 bis 120 Sekunden. Dauerhaftes Ansehen verlängert die Frist nicht; nach Ablauf zum erneuten Auswählen kurz wegsehen und erneut anvisieren. Ein neu anvisierter gültiger Spieler ersetzt sie. Beim Verlassen des Servers oder bei deaktiviertem System wird sie gelöscht. NPC-Spielerprofile werden anhand der vom Server als gelistet gemeldeten Spieler mit übereinstimmender UUID und Kontonamen gefiltert. Vollständig als echte Spieler gemeldete NPCs sind ohne zusätzliches Serversignal nicht zuverlässig unterscheidbar.
