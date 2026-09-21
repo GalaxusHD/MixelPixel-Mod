@@ -8,6 +8,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.mixelpixel.mod.client.config.ModConfig;
 
 public final class PlayerTargeting {
@@ -43,7 +44,16 @@ public final class PlayerTargeting {
     }
 
     public static AbstractClientPlayerEntity getMarkedTarget() {
-        return ModConfig.get().markerVisible() ? getTarget() : null;
+        if (!ModConfig.get().markerVisible()) return null;
+        AbstractClientPlayerEntity selected = getTarget();
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (selected == null || client.player == null || client.world == null) return null;
+        // Check from the actual camera, including third person. This only gates
+        // rendering: the stored selection and its timer remain intact.
+        Vec3d start = client.gameRenderer.getCamera().getPos();
+        HitResult obstruction = client.world.raycast(new RaycastContext(start, selected.getEyePos(),
+                RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, client.player));
+        return obstruction.getType() == HitResult.Type.MISS ? selected : null;
     }
     public static void tick(MinecraftClient client) {
         if (!ServerAccess.isAllowed(client) || !ModConfig.get().targetingEnabled()) {
